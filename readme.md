@@ -31,3 +31,20 @@ Login URL:
 
 In code use your class like this:
 `$yourAuthClass->authorize($_GET['code'])`
+
+Example (Nette Framework):
+```
+// waiting for authorization code from Keycloak
+if ($yourAuthClass->authorize($this->getParameter('code'))) {
+    $this->redirectUrl($yourAuthClass->getRedirectUri());
+} else {
+    if (!$yourAuthClass->isAuthorized()) {
+        $this->redirectUrl($yourAuthClass->getLoginUrl());
+    }
+}
+
+// check if user is logged in on every page, if not redirect him to Keycloak login page
+if (!$yourAuthClass->isAuthorized()) {
+    $this->redirectUrl($yourAuthClass->getLoginUrl());
+}
+```
