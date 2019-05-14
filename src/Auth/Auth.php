@@ -83,12 +83,13 @@
          * Authorizes and returns TRUE or FALSE.
          * And triggers method authorized() and setAuthorized()
          *
-         * @param RefreshToken $refreshToken
          * @return bool
          * @throws \Ataccama\Exceptions\NotDefined
          */
-        public function invokeForceAuthorization(RefreshToken $refreshToken): bool
+        public function invokeForceAuthorization(): bool
         {
+            $refreshToken = $this->getRefreshToken();
+
             // waiting for next re-auth
             if (time() < ($this->getLastReAuth() + $this->reAuthSleepTime)) {
                 return true;
@@ -122,11 +123,11 @@
         }
 
         /**
-         * @param RefreshToken $refreshToken
          * @throws \Ataccama\Exceptions\CurlException
          */
-        public function logoutSSO(RefreshToken $refreshToken)
+        public function logoutSSO()
         {
+            $refreshToken = $this->getRefreshToken();
             KeycloakAPI::logout($this->keycloak, $refreshToken);
         }
 
@@ -186,4 +187,10 @@
         {
             $_SESSION['auth']['lastReAuth'] = time();
         }
+
+        /**
+         * @return RefreshToken
+         */
+        abstract protected function getRefreshToken(): RefreshToken;
+
     }
