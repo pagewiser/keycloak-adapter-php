@@ -23,6 +23,17 @@
         protected $keycloak;
 
         /**
+         * Auth constructor.
+         * @param Keycloak $keycloak
+         */
+        public function __construct(Keycloak $keycloak)
+        {
+            $this->keycloak = $keycloak;
+
+            $this->startup();
+        }
+
+        /**
          * Authorizes and returns TRUE or FALSE.
          * And triggers method authorized() and setAuthorized()
          *
@@ -48,9 +59,23 @@
             return true;
         }
 
+        private function startup()
+        {
+            // init redirect
+            $this->keycloak->redirectUri = $this->getRedirectUri();
+        }
+
         private function beforeAuthorization()
         {
             $this->keycloak->redirectUri = $this->getRedirectUri();
+        }
+
+        /**
+         * @param string $redirectUri
+         */
+        public function setRedirectUri(string $redirectUri)
+        {
+            $this->keycloak->redirectUri = $redirectUri;
         }
 
         /**
