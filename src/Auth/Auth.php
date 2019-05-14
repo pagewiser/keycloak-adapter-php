@@ -84,7 +84,7 @@
 
             return new UserProfile($userIdentity->getId(), $userIdentity->getName(), $userIdentity->getEmail(),
                 $response->refreshToken->refreshToken, $response->refreshToken->expiration,
-                $userIdentity->getRoles($this->keycloak->clientId));
+                $userIdentity->getRoles($this->keycloak->clientId), $userIdentity->username);
         }
 
         /**

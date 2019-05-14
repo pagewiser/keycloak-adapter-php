@@ -21,13 +21,14 @@
      * @property-read string   $refreshToken
      * @property-read int      $refreshTokenExpiration
      * @property-read string[] $roles
+     * @property-read string   $username
      */
     class UserProfile
     {
         use SmartObject;
 
         /** @var string */
-        protected $id, $name, $email, $refreshToken;
+        protected $id, $name, $email, $refreshToken, $username;
 
         /** @var string[] */
         protected $roles;
@@ -50,7 +51,8 @@
             string $email,
             string $refreshToken,
             int $refreshTokenExpiration,
-            array $roles
+            array $roles,
+            string $username
         ) {
             $this->id = $id;
             $this->name = $name;
@@ -58,6 +60,15 @@
             $this->refreshToken = $refreshToken;
             $this->refreshTokenExpiration = $refreshTokenExpiration;
             $this->roles = $roles;
+            $this->username = $username;
+        }
+
+        /**
+         * @return string
+         */
+        public function getUsername(): string
+        {
+            return $this->username;
         }
 
         /**

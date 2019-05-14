@@ -13,19 +13,21 @@
 
 
     /**
-     * @property-read string $email
-     * @property-read string $name
-     * @property-read string $id
+     * @property-read string   $email
+     * @property-read string   $name
+     * @property-read string   $id
+     * @property-read string   $username
+     * @property-read string[] $roles
      */
     class UserIdentity
     {
         use SmartObject;
 
-        /** @var array */
+        /** @var string[] */
         private $roles;
 
         /** @var string */
-        protected $email, $name, $id;
+        protected $email, $name, $id, $username;
 
         /**
          * UserIdentity constructor.
@@ -36,7 +38,7 @@
             $this->id = $userIdentity->sub;
             $this->email = $userIdentity->email;
             $this->name = $userIdentity->name;
-
+            $this->username = $userIdentity->preferred_username;
             $this->roles = $userIdentity->resource_access;
         }
 
@@ -65,8 +67,16 @@
         }
 
         /**
+         * @return string
+         */
+        public function getUsername(): string
+        {
+            return $this->username;
+        }
+
+        /**
          * @param string $clientId
-         * @return array
+         * @return string[]
          */
         public function getRoles(string $clientId): array
         {
