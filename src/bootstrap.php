@@ -6,9 +6,9 @@
      * Time: 10:24
      */
 
-    if (session_id() == '' || !isset($_SESSION)) {
-        session_start();
-    }
+//    if (session_id() == '' || !isset($_SESSION)) {
+//        session_start();
+//    }
 
     require __DIR__ . "/Utils/Token.php";
     require __DIR__ . "/Exceptions/NotAuthorized.php";
