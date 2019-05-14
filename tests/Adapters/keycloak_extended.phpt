@@ -41,7 +41,7 @@
     //    $success = \Ataccama\Utils\KeycloakAPI::logout($keycloakExtended, $keycloakExtended->apiRefreshToken);
     //    Assert::same(true, $success);
 
-    $succes = \Ataccama\Utils\KeycloakAPI::userExists($keycloakExtended, "email@email.com);
+    $succes = \Ataccama\Utils\KeycloakAPI::userExists($keycloakExtended, "email@email.com");
     Assert::same(true, $succes);
 
     $succes = \Ataccama\Utils\KeycloakAPI::userExists($keycloakExtended, "xyz@email.com");
