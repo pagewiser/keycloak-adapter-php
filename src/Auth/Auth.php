@@ -10,9 +10,11 @@
 
 
     use Ataccama\Adapters\Keycloak;
+    use Ataccama\Adapters\Utils\UserProfile;
     use Ataccama\Utils\AuthorizationResponse;
     use Ataccama\Utils\KeycloakAPI;
     use Ataccama\Utils\RefreshToken;
+    use Ataccama\Utils\UserIdentity;
 
 
     abstract class Auth
@@ -24,22 +26,25 @@
          * Authorizes and returns user's profile.
          *
          * @param string|null $authorizationCode
-         * @return array
+         * @return bool
          * @throws \Ataccama\Exceptions\CurlException
          * @throws \Ataccama\Exceptions\UnknownError
          */
-        public function authorize(string $authorizationCode = null): array
+        public function authorize(string $authorizationCode = null): bool
         {
             if (empty($authorizationCode)) {
-                return [];
+                return false;
             }
 
             $this->beforeAuthorization();
 
             $response = KeycloakAPI::getAuthorization($this->keycloak, $authorizationCode);
-            $this->setAuthorized(true);
 
-            return $this->getUserProfile($response);
+            // triggers
+            $this->setAuthorized(true);
+            $this->authorized($this->getUserProfile($response));
+
+            return true;
         }
 
         private function beforeAuthorization()
@@ -51,40 +56,35 @@
          * Authorizes and returns user's profile.
          *
          * @param RefreshToken $refreshToken
-         * @return array
+         * @return bool
          * @throws \Ataccama\Exceptions\NotDefined
          */
-        public function invokeForceAuthorization(RefreshToken $refreshToken): array
+        public function invokeForceAuthorization(RefreshToken $refreshToken): bool
         {
             $this->beforeAuthorization();
             try {
                 $response = KeycloakAPI::reauthorize($this->keycloak, $refreshToken);
                 $this->setAuthorized(true);
+                $this->authorized($this->getUserProfile($response));
             } catch (\Exception $e) {
                 header("Location: " . $this->keycloak->getLoginUrl());
                 exit();
             }
 
-            return $this->getUserProfile($response);
+            return true;
         }
 
         /**
          * @param AuthorizationResponse $response
-         * @return array
+         * @return UserProfile
          */
-        protected function getUserProfile(AuthorizationResponse $response): array
+        private function getUserProfile(AuthorizationResponse $response): UserProfile
         {
             $userIdentity = $response->accessToken->getUserIdentity();
-            $profile = [
-                "id"                     => $userIdentity->getId(),
-                "name"                   => $userIdentity->getName(),
-                "email"                  => $userIdentity->getEmail(),
-                "roles"                  => $userIdentity->getRoles($this->keycloak->clientId),
-                "refreshToken"           => $response->refreshToken->refreshToken,
-                "refreshTokenExpiration" => $response->refreshToken->expiration
-            ];
 
-            return $profile;
+            return new UserProfile($userIdentity->getId(), $userIdentity->getName(), $userIdentity->getEmail(),
+                $response->refreshToken->refreshToken, $response->refreshToken->expiration,
+                $userIdentity->getRoles($this->keycloak->clientId));
         }
 
         /**
@@ -103,9 +103,15 @@
 
         /**
          * @param bool $authorized
-         * @return mixed
+         * @return bool
          */
-        abstract protected function setAuthorized(bool $authorized);
+        abstract protected function setAuthorized(bool $authorized): bool;
+
+        /**
+         * @param UserProfile $userProfile
+         * @return bool
+         */
+        abstract protected function authorized(UserProfile $userProfile): bool;
 
         /**
          * @return string
