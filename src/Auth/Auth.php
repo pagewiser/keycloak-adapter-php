@@ -29,8 +29,6 @@
         public function __construct(Keycloak $keycloak)
         {
             $this->keycloak = $keycloak;
-
-            $this->startup();
         }
 
         /**
@@ -57,12 +55,6 @@
             $this->authorized($this->getUserProfile($response));
 
             return true;
-        }
-
-        private function startup()
-        {
-            // init redirect
-            $this->keycloak->redirectUri = $this->getRedirectUri();
         }
 
         private function beforeAuthorization()
@@ -130,6 +122,7 @@
          */
         public function getLoginUrl()
         {
+            $this->keycloak->redirectUri = $this->getRedirectUri();
             $this->keycloak->getLoginUrl();
         }
 
