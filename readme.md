@@ -4,3 +4,12 @@
 
 ## Install
 `composer require ataccama/keycloak-adapter`
+
+## Use
+Create new class and extend class Ataccama\Auth, then you MUST implement all missing methods with your own logic.
+
+In code use your class like this:
+`$yourAuthClass->authorize($_GET['code'])`
+
+Login URL:
+`$loginUrl = $yourAuthClass->getLoginUrl()`

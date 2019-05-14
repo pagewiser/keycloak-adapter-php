@@ -23,7 +23,8 @@
         protected $keycloak;
 
         /**
-         * Authorizes and returns user's profile.
+         * Authorizes and returns TRUE or FALSE.
+         * And triggers method authorized() and setAuthorized()
          *
          * @param string|null $authorizationCode
          * @return bool
@@ -53,7 +54,8 @@
         }
 
         /**
-         * Authorizes and returns user's profile.
+         * Authorizes and returns TRUE or FALSE.
+         * And triggers method authorized() and setAuthorized()
          *
          * @param RefreshToken $refreshToken
          * @return bool
@@ -94,6 +96,16 @@
         public function logoutSSO(RefreshToken $refreshToken)
         {
             KeycloakAPI::logout($this->keycloak, $refreshToken);
+        }
+
+        /**
+         * Returns a login URL to Keycloak.
+         *
+         * @throws \Ataccama\Exceptions\NotDefined
+         */
+        public function getLoginUrl()
+        {
+            $this->keycloak->getLoginUrl();
         }
 
         /**
