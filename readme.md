@@ -9,15 +9,15 @@ Neon config:
 ```
 parameters:
     keycloak:
-        realm: your_realm
-        client_id: your_client_id
-        rootUri: https://your.keycloak.com
+        realmId: your_realm
+        clientDd: your_client_id
+        host: https://your.keycloak.com
         defaultRedirectUri: https://your.default.url
         api:
             username: your_username
             password: your_password
-            client_id: your_api_client_id
-            client_secret: your_client_secret
+            clientId: your_api_client_id
+            clientSecret: your_client_secret
             
 services:
     - Ataccama\Adapters\Keycloak(%keycloak%)
