@@ -11,7 +11,6 @@
     "nette/utils": "^2.4"
   },
   "require-dev": {
-    "nette/tester": "^1.7"
   },
   "autoload": {
     "classmap": ["src/"],
