@@ -23,6 +23,15 @@
         protected $keycloak;
 
         /**
+         * Re-authentication loads Keycloak, so keep this number as high as possible.
+         * This means the re-authentication process with Refresh Token will be skipped for 30 seconds after last
+         * re-authentication.
+         *
+         * @var int
+         */
+        public $reAuthSleepTime = 30;
+
+        /**
          * Auth constructor.
          * @param Keycloak $keycloak
          */
@@ -80,11 +89,17 @@
          */
         public function invokeForceAuthorization(RefreshToken $refreshToken): bool
         {
+            // waiting for next re-auth
+            if (time() < ($this->getLastReAuth() + $this->reAuthSleepTime)) {
+                return true;
+            }
+
             $this->beforeAuthorization();
             try {
                 $response = KeycloakAPI::reauthorize($this->keycloak, $refreshToken);
                 $this->setAuthorized(true);
                 $this->authorized($this->getUserProfile($response));
+                $this->notifyReAuth();
             } catch (\Exception $e) {
                 header("Location: " . $this->keycloak->getLoginUrl());
                 exit();
@@ -149,4 +164,26 @@
          * @return string
          */
         abstract public function getRedirectUri(): string;
+
+        public function setAuthSleep(int $seconds)
+        {
+
+        }
+
+        /**
+         * @return int
+         */
+        private function getLastReAuth(): int
+        {
+            if (isset($_SESSION['auth']['lastReAuth'])) {
+                return $_SESSION['auth']['lastReAuth'];
+            }
+
+            return 0;
+        }
+
+        private function notifyReAuth()
+        {
+            $_SESSION['auth']['lastReAuth'] = time();
+        }
     }
