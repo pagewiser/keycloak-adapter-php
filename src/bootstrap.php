@@ -15,6 +15,7 @@
     require __DIR__ . "/Exceptions/NotAuthenticated.php";
     require __DIR__ . "/Exceptions/NotDefined.php";
     require __DIR__ . "/Exceptions/UnknownError.php";
+    require __DIR__ . "/Utils/UserProfile.php";
     require __DIR__ . "/Adapters/Keycloak.php";
     require __DIR__ . "/Adapters/KeycloakExtended.php";
     require __DIR__ . "/Utils/UserIdentity.php";

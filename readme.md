@@ -5,6 +5,24 @@
 ## Install
 `composer require ataccama/keycloak-adapter`
 
+Neon config:
+```
+parameters:
+    keycloak:
+        realm: your_realm
+        client_id: your_client_id
+        rootUri: https://your.keycloak.com
+        defaultRedirectUri: https://your.default.url
+        api:
+            username: your_username
+            password: your_password
+            client_id: your_api_client_id
+            client_secret: your_client_secret
+            
+services:
+    - Ataccama\Adapters\Keycloak(%keycloak%)
+```
+
 ## Use
 Create new class and extend class Ataccama\Auth, then you MUST implement all missing methods with your own logic.
 
