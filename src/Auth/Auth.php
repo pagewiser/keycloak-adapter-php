@@ -118,12 +118,14 @@
         /**
          * Returns a login URL to Keycloak.
          *
+         * @return string
          * @throws \Ataccama\Exceptions\NotDefined
          */
-        public function getLoginUrl()
+        public function getLoginUrl(): string
         {
             $this->keycloak->redirectUri = $this->getRedirectUri();
-            $this->keycloak->getLoginUrl();
+
+            return $this->keycloak->getLoginUrl();
         }
 
         /**

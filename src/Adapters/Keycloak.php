@@ -58,7 +58,7 @@
          * @return string
          * @throws NotDefined
          */
-        public function getLoginUrl()
+        public function getLoginUrl(): string
         {
             if (empty($this->redirectUri)) {
                 throw new NotDefined("Parameter 'redirectUri' is not defined.");
