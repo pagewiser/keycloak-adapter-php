@@ -148,5 +148,5 @@
         /**
          * @return string
          */
-        abstract protected function getRedirectUri(): string;
+        abstract public function getRedirectUri(): string;
     }
