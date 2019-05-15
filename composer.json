@@ -2,7 +2,7 @@
   "name": "ataccama/keycloak-adapter",
   "license": "MIT",
   "description": "Easy-to-use PHP adapter for Keycloak authentication",
-  "version": "1.0",
+  "version": "v1.0.0-alpha",
   "type": "library",
   "require": {
     "php": ">= 7.2.0",
