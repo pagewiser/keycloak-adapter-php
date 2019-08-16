@@ -163,8 +163,12 @@
                 return true;
             }
 
-            throw new CurlException("HTTP $response->code: " . $response->body->error . ": " .
-                $response->body->error_description);
+            if (isset($response->body->error)) {
+                throw new CurlException("HTTP $response->code: " . $response->body->error . ": " .
+                    $response->body->error_description);
+            } else {
+                throw new CurlException("HTTP $response->code: " . $response->error);
+            }
         }
 
         public static function userExists(KeycloakExtended $keycloak, string $email): bool
