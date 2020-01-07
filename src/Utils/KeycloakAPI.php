@@ -11,9 +11,10 @@
 
     use Ataccama\Adapters\Keycloak;
     use Ataccama\Adapters\KeycloakExtended;
+    use Ataccama\Clients\Keycloak\Env\Users\User;
     use Ataccama\Exceptions\CurlException;
     use Ataccama\Exceptions\UnknownError;
-    use Nette\Utils\Validators;
+    use Tracy\Debugger;
 
 
     class KeycloakAPI
@@ -113,6 +114,33 @@
             }
 
             throw new CurlException("User creation failed. HTTP response code: $response->code");
+        }
+
+        /**
+         * @param KeycloakExtended $keycloak
+         * @param string           $email
+         * @return User
+         * @throws CurlException
+         */
+        public static function getUserByEmail(
+            KeycloakExtended $keycloak,
+            string $email
+        ): User {
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users", [
+                "Content-Type"  => "application/json",
+                "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
+            ], json_encode([
+                "email" => $email
+            ]));
+
+            if ($response->code == 200) {
+                if (isset($response->body[0])) {
+                    return new User($response->body[0]->id, $response->body[0]->firstName, $response->body[0]->lastName,
+                        $response->body[0]->email);
+                }
+            }
+
+            throw new CurlException("Getting user by email failed. HTTP response code: $response->code");
         }
 
         /**
