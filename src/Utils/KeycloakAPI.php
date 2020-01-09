@@ -126,12 +126,10 @@
             KeycloakExtended $keycloak,
             string $email
         ): User {
-            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users", [
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=$email", [
                 "Content-Type"  => "application/json",
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
-            ], json_encode([
-                "email" => $email
-            ]));
+            ]);
 
             if ($response->code == 200) {
                 foreach ($response->body as $user) {
@@ -142,7 +140,7 @@
                 }
             }
 
-            throw new CurlException("Getting user by email failed. HTTP response code: $response->code");
+            throw new CurlException("Getting user by email failed. HTTP response code: $response->code ($response->error)");
         }
 
         /**
