@@ -134,9 +134,11 @@
             ]));
 
             if ($response->code == 200) {
-                if (isset($response->body[0])) {
-                    return new User($response->body[0]->id, $response->body[0]->firstName, $response->body[0]->lastName,
-                        $response->body[0]->email);
+                foreach ($response->body as $user) {
+                    if($user->email == $email) {
+                        return new User($user->id, $user->firstName, $user->lastName,
+                            $user->email);
+                    }
                 }
             }
 
