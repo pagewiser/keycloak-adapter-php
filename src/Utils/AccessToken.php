@@ -8,7 +8,6 @@
 
     namespace Ataccama\Utils;
 
-    use Ataccama\Common\Utils\Convertor;
     use Nette\SmartObject;
 
 
@@ -41,7 +40,8 @@
         public function getUserIdentity(): UserIdentity
         {
             $exploded = explode('.', $this->bearer);
-            $stdObject = json_decode(Convertor::base64url_decode($exploded[1]));
+            $stdObject = json_decode(base64_decode(str_pad(strtr($exploded[0], '-_', '+/'), strlen($exploded[0]) % 4,
+                '=', STR_PAD_RIGHT)));
 
             return new UserIdentity($stdObject);
         }
