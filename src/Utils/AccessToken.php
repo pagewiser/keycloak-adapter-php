@@ -40,7 +40,7 @@
         public function getUserIdentity(): UserIdentity
         {
             $exploded = explode('.', $this->bearer);
-            $stdObject = json_decode(base64_decode(str_pad(strtr($exploded[0], '-_', '+/'), strlen($exploded[0]) % 4,
+            $stdObject = json_decode(base64_decode(str_pad(strtr($exploded[1], '-_', '+/'), strlen($exploded[1]) % 4,
                 '=', STR_PAD_RIGHT)));
 
             return new UserIdentity($stdObject);
