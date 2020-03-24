@@ -133,9 +133,8 @@
 
             if ($response->code == 200) {
                 foreach ($response->body as $user) {
-                    if($user->email == $email) {
-                        return new User($user->id, $user->firstName, $user->lastName,
-                            $user->email);
+                    if ($user->email == $email) {
+                        return new User($user->id, $user->firstName, $user->lastName, $user->email);
                     }
                 }
             }
@@ -210,5 +209,41 @@
             }
 
             return false;
+        }
+
+        /**
+         * @param KeycloakExtended $keycloak
+         * @param string           $keycloakId
+         * @param string           $password
+         * @param bool             $temporary
+         * @return bool
+         * @throws CurlException
+         */
+        public static function setPassword(
+            KeycloakExtended $keycloak,
+            string $keycloakId,
+            string $password,
+            bool $temporary = false
+        ) {
+            $response = Curl::put("$keycloak->host/auth/admin/realms/$keycloak->realmId/users/$keycloakId/reset-password",
+                [
+                    "Content-Type"  => "application/json",
+                    "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer,
+                ], json_encode([
+                        "temporary" => $temporary,
+                        "type"      => "password",
+                        "value"     => $password
+                    ]));
+
+            if ($response->code == 204) {
+                return true;
+            }
+
+            if (isset($response->body->error)) {
+                throw new CurlException("HTTP $response->code: " . $response->body->error . ": " .
+                    $response->body->error_description);
+            } else {
+                throw new CurlException("HTTP $response->code: " . $response->error);
+            }
         }
     }
