@@ -14,9 +14,12 @@
     use Ataccama\Utils\AuthorizationResponse;
     use Ataccama\Utils\KeycloakAPI;
     use Ataccama\Utils\RefreshToken;
-    use Ataccama\Utils\UserIdentity;
 
 
+    /**
+     * Class Auth
+     * @package Ataccama\Auth
+     */
     abstract class Auth
     {
         /** @var Keycloak */

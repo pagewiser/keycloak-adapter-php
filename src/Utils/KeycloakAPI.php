@@ -14,9 +14,12 @@
     use Ataccama\Clients\Keycloak\Env\Users\User;
     use Ataccama\Exceptions\CurlException;
     use Ataccama\Exceptions\UnknownError;
-    use Tracy\Debugger;
 
 
+    /**
+     * Class KeycloakAPI
+     * @package Ataccama\Utils
+     */
     class KeycloakAPI
     {
         /**
@@ -186,7 +189,7 @@
                 "client_id"     => $keycloak->clientId
             ]);
 
-            if ($response->code == 200) {
+            if ($response->code == 200 || $response->code == 204) {
                 return true;
             }
 
@@ -230,10 +233,10 @@
                     "Content-Type"  => "application/json",
                     "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer,
                 ], json_encode([
-                        "temporary" => $temporary,
-                        "type"      => "password",
-                        "value"     => $password
-                    ]));
+                    "temporary" => $temporary,
+                    "type"      => "password",
+                    "value"     => $password
+                ]));
 
             if ($response->code == 204) {
                 return true;
