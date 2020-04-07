@@ -148,6 +148,17 @@
         }
 
         /**
+         * @return string
+         * @throws \Ataccama\Exceptions\NotDefined
+         */
+        public function getRegistrationUrl(): string
+        {
+            $this->keycloak->redirectUri = $this->getRedirectUri();
+
+            return $this->keycloak->getRegistrationUrl();
+        }
+
+        /**
          * @return bool
          */
         abstract public function isAuthorized(): bool;

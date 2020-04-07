@@ -70,6 +70,20 @@
 
         /**
          * @return string
+         * @throws NotDefined
+         */
+        public function getRegistrationUrl(): string
+        {
+            if (empty($this->redirectUri)) {
+                throw new NotDefined("Parameter 'redirectUri' is not defined.");
+            }
+
+            return "$this->host/auth/realms/$this->realmId/protocol/openid-connect/registrations?client_id=$this->clientId&response_type=code&scope=openid%20email&redirect_uri=" .
+                urlencode($this->redirectUri) . "&kc_locale=en";
+        }
+
+        /**
+         * @return string
          */
         public function getHost()
         {
