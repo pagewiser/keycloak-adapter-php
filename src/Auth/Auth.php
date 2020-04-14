@@ -14,6 +14,7 @@
     use Ataccama\Utils\AuthorizationResponse;
     use Ataccama\Utils\KeycloakAPI;
     use Ataccama\Utils\RefreshToken;
+    use Nette\Utils\Random;
 
 
     /**
@@ -24,6 +25,9 @@
     {
         /** @var Keycloak */
         protected $keycloak;
+
+        /** @var string */
+        protected $state;
 
         /**
          * Re-authentication loads Keycloak, so keep this number as high as possible.
@@ -41,6 +45,7 @@
         public function __construct(Keycloak $keycloak)
         {
             $this->keycloak = $keycloak;
+            $this->state = Random::generate(8);
         }
 
         /**
@@ -144,7 +149,7 @@
         {
             $this->keycloak->redirectUri = $this->getRedirectUri();
 
-            return $this->keycloak->getLoginUrl();
+            return $this->keycloak->getLoginUrl() . "&state=" . $this->state;
         }
 
         /**
@@ -207,4 +212,15 @@
          */
         abstract protected function getRefreshToken(): RefreshToken;
 
+        /**
+         * Sets the state
+         *
+         * The state is a string that returns with a code from Keycloak, when an user has successfully logged in.
+         *
+         * @param string $state
+         */
+        public function setState(string $state): void
+        {
+            $this->state = $state;
+        }
     }
