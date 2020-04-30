@@ -45,7 +45,6 @@
         public function __construct(Keycloak $keycloak)
         {
             $this->keycloak = $keycloak;
-            $this->state = Random::generate(8);
         }
 
         /**
