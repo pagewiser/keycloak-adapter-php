@@ -14,7 +14,6 @@
     use Ataccama\Utils\AuthorizationResponse;
     use Ataccama\Utils\KeycloakAPI;
     use Ataccama\Utils\RefreshToken;
-    use Nette\Utils\Random;
 
 
     /**
@@ -221,5 +220,23 @@
         public function setState(string $state): void
         {
             $this->state = $state;
+        }
+
+        /**
+         * Log in via Keyclok API
+         *
+         * Keycloak have to have defined client secret and allow direct granting.
+         *
+         * @param string $username
+         * @param string $password
+         * @return bool
+         * @throws \Ataccama\Exceptions\CurlException
+         * @throws \Ataccama\Exceptions\NotDefined
+         */
+        public function logIn(string $username, string $password): bool
+        {
+            $userProfile = KeycloakAPI::logIn($this->keycloak, $username, $password);
+
+            return $this->authorized($userProfile);
         }
     }
