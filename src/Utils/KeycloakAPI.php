@@ -33,14 +33,20 @@
          */
         public static function getAuthorization(Keycloak $keycloak, string $authorizationCode): AuthorizationResponse
         {
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
-                "Content-Type" => "application/x-www-form-urlencoded"
-            ], [
+            $request = [
                 'grant_type'   => 'authorization_code',
                 'code'         => $authorizationCode,
                 'client_id'    => $keycloak->clientId,
                 'redirect_uri' => $keycloak->redirectUri
-            ]);
+            ];
+
+            if (!empty($keycloak->clientSecret)) {
+                $request["client_secret"] = $keycloak->clientSecret;
+            }
+
+            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
+                "Content-Type" => "application/x-www-form-urlencoded"
+            ], $request);
 
             if (isset($response->body->error)) {
                 throw new CurlException($response->body->error . ": " . $response->body->error_description);
