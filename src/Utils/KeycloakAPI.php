@@ -96,6 +96,7 @@
          * @param string           $email
          * @param bool             $enabled
          * @param array            $groups
+         * @param bool             $emailVerified
          * @return bool
          * @throws CurlException
          */
@@ -106,19 +107,25 @@
             string $lastname,
             string $email,
             bool $enabled = true,
-            array $groups = ['default-group']
+            array $groups = ['default-group'],
+            bool $emailVerified = false
         ): bool {
-            $response = Curl::post("$keycloak->host/auth/admin/realms/$keycloak->realmId/users", [
-                "Content-Type"  => "application/json",
-                "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
-            ], json_encode([
+            $request = [
                 'username'  => $username,
                 'firstName' => $firstname,
                 'lastName'  => $lastname,
                 "email"     => $email,
                 "enabled"   => $enabled,
                 "groups"    => $groups
-            ]));
+            ];
+            if ($emailVerified) {
+                $request["emailVerified"] = true;
+            }
+
+            $response = Curl::post("$keycloak->host/auth/admin/realms/$keycloak->realmId/users", [
+                "Content-Type"  => "application/json",
+                "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
+            ], json_encode($request));
 
             if ($response->code == 201) {
                 return true;
