@@ -197,12 +197,18 @@
          */
         public static function logout(Keycloak $keycloak, RefreshToken $userRefreshToken): bool
         {
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/logout", [
-                "Content-Type" => "application/x-www-form-urlencoded"
-            ], [
+            $data = [
                 "refresh_token" => $userRefreshToken->refreshToken,
                 "client_id"     => $keycloak->clientId
-            ]);
+            ];
+
+            if (!empty($keycloak->clientSecret)) {
+                $data["client_secret"] = $keycloak->clientSecret;
+            }
+
+            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/logout", [
+                "Content-Type" => "application/x-www-form-urlencoded"
+            ], $data);
 
             if ($response->code == 200 || $response->code == 204) {
                 return true;
