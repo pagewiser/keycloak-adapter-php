@@ -144,7 +144,8 @@
             KeycloakExtended $keycloak,
             string $email
         ): User {
-            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=$email", [
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=" .
+                urlencode($email), [
                 "Content-Type"  => "application/json",
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
             ]);
@@ -155,6 +156,8 @@
                         return new User($user->id, $user->firstName, $user->lastName, $user->email);
                     }
                 }
+
+                throw new CurlException("An user identified by an email $email does not exist.");
             }
 
             throw new CurlException("Getting user by email failed. HTTP response code: $response->code ($response->error)");
