@@ -227,7 +227,8 @@
 
         public static function userExists(KeycloakExtended $keycloak, string $email): bool
         {
-            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=$email", [
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=" .
+                urlencode($email), [
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
             ]);
 
