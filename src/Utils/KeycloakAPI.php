@@ -227,16 +227,27 @@
 
         public static function userExists(KeycloakExtended $keycloak, string $email): bool
         {
-            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=" .
-                urlencode($email), [
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=" . urlencode($email), [
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
             ]);
 
-            if (isset($response->body[0]->username)) {
-                return ($email == $response->body[0]->username);
-            }
+            return (
+                (isset($response->body[0]->username)) && ($email == $response->body[0]->username)
+                || (isset($response->body[0]->email)) && ($email == $response->body[0]->email)
+            );
+        }
 
-            return false;
+        public static function getUsernameByEmail(KeycloakExtended $keycloak, string $email): ?string
+        {
+            $response = Curl::get("$keycloak->host/auth/admin/realms/$keycloak->realmId/users?email=" . urlencode($email), [
+                "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
+            ]);
+
+            return (
+                isset($response->body[0]->username)
+                && isset($response->body[0]->email)
+                && ($email == $response->body[0]->email)
+            ) ? $response->body[0]->username : null;
         }
 
         /**
