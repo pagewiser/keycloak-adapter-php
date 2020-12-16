@@ -231,10 +231,15 @@
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
             ]);
 
-            return (
-                (isset($response->body[0]->username)) && ($email == $response->body[0]->username)
-                || (isset($response->body[0]->email)) && ($email == $response->body[0]->email)
-            );
+            foreach ($response->body as $user) {
+                if (
+                    (isset($user->username)) && ($email == $user->username)
+                    || (isset($user->body[0]->email)) && ($email == $user->email)
+                ) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static function getUsernameByEmail(KeycloakExtended $keycloak, string $email): ?string
