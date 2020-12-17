@@ -234,7 +234,7 @@
             foreach ($response->body as $user) {
                 if (
                     (isset($user->username)) && ($email == $user->username)
-                    || (isset($user->body[0]->email)) && ($email == $user->email)
+                    || (isset($user->email)) && ($email == $user->email)
                 ) {
                     return true;
                 }
