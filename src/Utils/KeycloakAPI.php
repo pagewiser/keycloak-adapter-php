@@ -231,12 +231,14 @@
                 "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer
             ]);
 
-            foreach ($response->body as $user) {
-                if (
-                    (isset($user->username)) && ($email == $user->username)
-                    || (isset($user->email)) && ($email == $user->email)
-                ) {
-                    return true;
+            if(is_array($response->body)) {
+                foreach ($response->body as $user) {
+                    if (
+                        (isset($user->username)) && ($email == $user->username)
+                        || (isset($user->email)) && ($email == $user->email)
+                    ) {
+                        return true;
+                    }
                 }
             }
             return false;
