@@ -115,6 +115,27 @@
             return true;
         }
 
+        public function isSessionExpired(): bool
+        {
+            $refreshToken = $this->getRefreshToken();
+
+            // waiting for next re-auth
+            if (time() < ($this->getLastReAuth() + $this->reAuthSleepTime)) {
+                return false;
+            }
+
+            try {
+                $response = KeycloakAPI::reauthorize($this->keycloak, $refreshToken);
+                $this->setAuthorized(true);
+                $this->authorized($this->getUserProfile($response));
+                $this->notifyReAuth();
+
+                return false;
+            } catch (\Exception $e) {
+                return true;
+            }
+        }
+
         /**
          * @param AuthorizationResponse $response
          * @return UserProfile
