@@ -2,7 +2,7 @@
   "name": "ataccama/keycloak-adapter",
   "license": "MIT",
   "description": "Easy-to-use PHP adapter for Keycloak authentication",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "type": "library",
   "require": {
     "php": ">= 7.2.0",
@@ -12,8 +12,12 @@
     "nette/tester": "^2.3"
   },
   "autoload": {
-    "classmap": ["src/"],
-    "files": ["src/bootstrap.php"]
+    "classmap": [
+      "src/"
+    ],
+    "files": [
+      "src/bootstrap.php"
+    ]
   },
   "minimum-stability": "stable",
   "config": {
