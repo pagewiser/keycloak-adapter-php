@@ -183,14 +183,14 @@
             ]);
 
             if (isset($response->body->error)) {
-                throw new CurlException($response->body->error . ": " . $response->body->error_description);
+                throw new CurlException($response->body->error . ": " . $response->body->error_description ?? "no error description");
             }
 
             if (isset($response->body->access_token)) {
                 return new AuthorizationResponse($response->body);
             }
 
-            throw new UnknownError("???");
+            throw new UnknownError("Unknown error");
         }
 
         /**
