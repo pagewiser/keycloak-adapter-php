@@ -341,21 +341,20 @@
         /**
          * Checks if $token is valid (active).
          *
-         * @param KeycloakExtended $keycloak
-         * @param string           $token Access Token or Refresh Token
+         * @param Keycloak $keycloak
+         * @param string   $token Access Token or Refresh Token
          * @return bool
          * @throws CurlException
          */
-        public static function isTokenActive(KeycloakExtended $keycloak, string $token): bool
+        public static function isTokenActive(Keycloak $keycloak, string $token): bool
         {
             $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token/introspect",
                 [
                     "Content-Type" => "application/x-www-form-urlencoded"
                 ], [
                     'token'         => $token,
-                    'client_id'     => $keycloak->apiClientId,
-                    'client_secret' => $keycloak->apiClientSecret,
-                    'username'      => $keycloak->apiUsername
+                    'client_id'     => $keycloak->clientId,
+                    'client_secret' => $keycloak->clientSecret
                 ]);
 
             if ($response->code == 200) {

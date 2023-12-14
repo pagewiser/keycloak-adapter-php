@@ -28,6 +28,9 @@
         /** @var string */
         protected $state;
 
+        /** @var string[] */
+        public $errors = [];
+
         /**
          * Re-authentication loads Keycloak, so keep this number as high as possible.
          * This means the re-authentication process with Refresh Token will be skipped for 30 seconds after last
@@ -117,22 +120,27 @@
 
         public function isSessionExpired(): bool
         {
-            $refreshToken = $this->getRefreshToken();
-
             // waiting for next re-auth
             if (time() < ($this->getLastReAuth() + $this->reAuthSleepTime)) {
                 return false;
             }
 
+            return !$this->isRefreshTokenValid();
+        }
+
+        /**
+         * @return bool
+         */
+        public function isRefreshTokenValid(): bool
+        {
+            $refreshToken = $this->getRefreshToken();
+
             try {
-                $response = KeycloakAPI::reauthorize($this->keycloak, $refreshToken);
-                $this->setAuthorized(true);
-                $this->authorized($this->getUserProfile($response));
-                $this->notifyReAuth();
+                return KeycloakAPI::isTokenActive($this->keycloak, $refreshToken->refreshToken);
+            } catch (\Throwable $t) {
+                $this->errors[] = $t->getMessage();
 
                 return false;
-            } catch (\Exception $e) {
-                return true;
             }
         }
 
