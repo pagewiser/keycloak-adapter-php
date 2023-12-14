@@ -183,7 +183,8 @@
             ]);
 
             if (isset($response->body->error)) {
-                throw new CurlException($response->body->error . ": " . $response->body->error_description ?? "no error description");
+                throw new CurlException($response->body->error . ": " . $response->body->error_description ??
+                    "no error description");
             }
 
             if (isset($response->body->access_token)) {
@@ -335,5 +336,34 @@
             } else {
                 throw new CurlException("HTTP $response->code: " . $response->error);
             }
+        }
+
+        /**
+         * Checks if $token is valid (active).
+         *
+         * @param KeycloakExtended $keycloak
+         * @param string           $token Access Token or Refresh Token
+         * @return bool
+         * @throws CurlException
+         */
+        public static function isTokenActive(KeycloakExtended $keycloak, string $token): bool
+        {
+            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token/introspect",
+                [
+                    "Content-Type" => "application/x-www-form-urlencoded"
+                ], [
+                    'token'         => $token,
+                    'client_id'     => $keycloak->apiClientId,
+                    'client_secret' => $keycloak->apiClientSecret,
+                    'username'      => $keycloak->apiUsername
+                ]);
+
+            if ($response->code == 200) {
+                if (isset($response->body->active)) {
+                    return $response->body->active;
+                }
+            }
+
+            return false;
         }
     }

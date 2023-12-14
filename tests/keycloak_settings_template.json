@@ -1,0 +1,12 @@
+{
+  "realmId": "default",
+  "clientId": "default-app",
+  "clientSecret": "your-secret",
+  "host": "localhost",
+  "api": {
+    "username": "your@api.account",
+    "password": "yourPassword",
+    "clientId": "your-api-client",
+    "clientSecret": "your-api-client-secret"
+  }
+}
