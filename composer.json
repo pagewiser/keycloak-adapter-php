@@ -1,5 +1,5 @@
 {
-  "name": "ataccama/keycloak-adapter",
+  "name": "pagewiser/keycloak-adapter",
   "license": "MIT",
   "description": "Easy-to-use PHP adapter for Keycloak authentication",
   "version": "2.0.15",
