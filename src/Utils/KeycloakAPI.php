@@ -44,7 +44,7 @@
                 $request["client_secret"] = $keycloak->clientSecret;
             }
 
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/token", [
                 "Content-Type" => "application/x-www-form-urlencoded"
             ], $request);
 
@@ -67,7 +67,7 @@
          */
         public static function getApiAuthorization(KeycloakExtended $keycloak): AuthorizationResponse
         {
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/token", [
                 "Content-Type" => "application/x-www-form-urlencoded"
             ], [
                 'grant_type'    => 'password',
@@ -172,7 +172,7 @@
          */
         public static function reauthorize(Keycloak $keycloak, RefreshToken $userRefreshToken): AuthorizationResponse
         {
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/token", [
                 "Content-Type" => "application/x-www-form-urlencoded"
             ], [
                 'grant_type'    => 'refresh_token',
@@ -211,7 +211,7 @@
                 $data["client_secret"] = $keycloak->clientSecret;
             }
 
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/logout", [
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/logout", [
                 "Content-Type" => "application/x-www-form-urlencoded"
             ], $data);
 
@@ -310,7 +310,7 @@
                 throw new NotDefined("Optional parameter 'clientSecret' is not defined. You have to define it for logging via API.");
             }
 
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token", [
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/token", [
                 "Content-Type" => "application/x-www-form-urlencoded",
             ], [
                 "grant_type"    => "password",
@@ -348,7 +348,7 @@
          */
         public static function isTokenActive(Keycloak $keycloak, string $token): bool
         {
-            $response = Curl::post("$keycloak->host/auth/realms/$keycloak->realmId/protocol/openid-connect/token/introspect",
+            $response = Curl::post("$keycloak->host/realms/$keycloak->realmId/protocol/openid-connect/token/introspect",
                 [
                     "Content-Type" => "application/x-www-form-urlencoded"
                 ], [
