@@ -37,8 +37,8 @@
         public function __construct(\stdClass $userIdentity)
         {
             $this->id = $userIdentity->sub;
-            $this->email = $userIdentity->email;
-            $this->name = $userIdentity->name ? $userIdentity->name : '';
+            $this->email = $userIdentity->email ?? '';
+            $this->name = $userIdentity->name ?? '';
             $this->username = $userIdentity->preferred_username;
             $this->roles = $userIdentity->resource_access;
         }
