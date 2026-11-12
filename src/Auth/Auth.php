@@ -58,7 +58,7 @@
          * @throws \Ataccama\Exceptions\CurlException
          * @throws \Ataccama\Exceptions\UnknownError
          */
-        public function authorize(string $authorizationCode = null): bool
+        public function authorize(?string $authorizationCode = null): bool
         {
             if (empty($authorizationCode)) {
                 return false;
