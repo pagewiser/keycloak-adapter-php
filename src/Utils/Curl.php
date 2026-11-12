@@ -8,9 +8,7 @@
 
     namespace Ataccama\Utils;
 
-
     use Ataccama\Exceptions\CurlException;
-
 
     class Curl
     {
@@ -53,8 +51,6 @@
             }
 
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            curl_close($ch);
 
             return new Response($httpcode, json_decode($response), $error);
         }
@@ -99,8 +95,6 @@
 
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            curl_close($ch);
-
             return new Response($httpcode, json_decode($response), $error);
         }
 
@@ -132,8 +126,6 @@
             }
 
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            curl_close($ch);
 
             return new Response($httpcode, json_decode($response), $error);
         }
