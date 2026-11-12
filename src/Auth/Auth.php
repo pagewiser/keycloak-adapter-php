@@ -176,7 +176,7 @@
         {
             $this->keycloak->redirectUri = $this->getRedirectUri();
 
-            return $this->keycloak->getLoginUrl() . "&state=" . $this->state;
+            return $this->keycloak->getLoginUrl() . "&state=" . urlencode((string) $this->state);
         }
 
         /**

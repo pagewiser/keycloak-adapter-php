@@ -271,7 +271,7 @@
             string $password,
             bool $temporary = false
         ) {
-            $response = Curl::put("$keycloak->host/auth/admin/realms/$keycloak->realmId/users/$keycloakId/reset-password",
+            $response = Curl::put("$keycloak->host/auth/admin/realms/$keycloak->realmId/users/" . rawurlencode($keycloakId) . "/reset-password",
                 [
                     "Content-Type"  => "application/json",
                     "Authorization" => "Bearer " . $keycloak->apiAccessToken->bearer,
